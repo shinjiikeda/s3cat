@@ -18,7 +18,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    Usage: s3cat [options]
+             --bucket bucketname
+             --object_prefix prefix
+             --access_key key
+             --secret_key key
 
 ## Contributing
 
