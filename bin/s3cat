@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 's3cat'
+
+S3cat.main
+
