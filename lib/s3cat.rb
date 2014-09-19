@@ -29,8 +29,30 @@ module S3cat
     
     objs.each do | obj |
       #p obj
-      obj.read do |chunk|
-        STDOUT.write(chunk)
+      obj_size = obj.content_length
+      STDERR.puts "s3 obj: #{obj.key}"
+      3.times.each do | n |
+        tmpfile = Tempfile.open("s3cat-tmp")
+        begin
+          obj.read do |chunk|
+            tmpfile.write(chunk)
+          end
+          if tmpfile.size != obj_size
+            raise "file size error"
+          end
+          File.open(tmpfile.path, "r") do | io |
+            while buf = io.read(65536)
+              STDOUT.write(buf)
+            end
+          end
+          break
+        rescue => e
+          STDERR.puts "retry."
+          STDERR.puts e.to_s
+          STDERR.puts e.backtrace
+        ensure
+          tmpfile.close!
+        end
       end
     end
   end
